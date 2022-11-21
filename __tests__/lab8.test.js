@@ -29,7 +29,7 @@ describe('Basic user flow for Website', () => {
     for(var i = 1; i<21; i++){
       console.log(`Checking product item ${i}/${prodItems.length}`);
       // Grab the .data property of <product-items> to grab all of the json data stored inside
-      data = await prodItems[0].getProperty('data');
+      data = await prodItems[i-1].getProperty('data');
       // Convert that property to JSON
       plainValue = await data.jsonValue();
       // Make sure the title, price, and image are populated in the JSON
@@ -71,12 +71,12 @@ describe('Basic user flow for Website', () => {
     // get the shadowRoot and query select the button inside, and click on it.
     // Check to see if the innerText of #cart-count is 20
     var prodItems = await page.$$('product-item');
+    var counts = await page.$('#cart-count');
     for (var i = 1; i<20; i++){
       var shadowRoot = await prodItems[i].getProperty('shadowRoot');
       var button = await shadowRoot.$('button');
       await button.click();
     }
-    var counts = await page.$('#cart-count');
     var carNumInner = await (await counts.getProperty('innerText')).jsonValue();
     expect(carNumInner).toBe("20");
   }, 10000);
